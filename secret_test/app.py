@@ -58,14 +58,20 @@ def get_secret():
 
 def lambda_handler(event, context):
 
-    secret = get_secret()
+    try:
+        secret = get_secret()
+    except Exception as e:
+        return {
+            "statusCode": 200,
+            "body": json.dumps({"message": "ERROR", "error": str(e),}),
+        }
 
     return {
         "statusCode": 200,
         "body": json.dumps(
             {
                 "message": "hello world!",
-                "secert" : secret,
+                "secert": secret,
                 # "location": ip.text.replace("\n", "")
             }
         ),
