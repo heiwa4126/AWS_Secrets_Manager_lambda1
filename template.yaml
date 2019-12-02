@@ -26,12 +26,14 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
+              # copy from AWSLambdaBasicExecutionRole
               - Effect: Allow
                 Action:
                   - "logs:CreateLogGroup"
                   - "logs:CreateLogStream"
                   - "logs:PutLogEvents"
                 Resource: "*"
+              # plus secret key readable policy
               - Effect: Allow
                 Action:
                   - "secretsmanager:GetSecretValue"
