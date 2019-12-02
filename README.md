@@ -2,7 +2,7 @@
 
 This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
 
-- hello_world - Code for the application's Lambda function.
+- secret_test - Code for the application's Lambda function.
 - events - Invocation events that you can use to invoke the function.
 - tests - Unit tests for the application code.
 - template.yaml - A template that defines the application's AWS resources.
@@ -52,7 +52,7 @@ Build your application with the `sam build` command.
 AWS_Secrets_Manager_lambda1$ sam build
 ```
 
-The SAM CLI installs dependencies defined in `hello_world/requirements.txt`, creates a deployment package, and saves it in the `.aws-sam/build` folder.
+The SAM CLI installs dependencies defined in `secret_test/requirements.txt`, creates a deployment package, and saves it in the `.aws-sam/build` folder.
 
 Test a single function by invoking it directly with a test event. An event is a JSON document that represents the input that the function receives from the event source. Test events are included in the `events` folder in this project.
 
@@ -66,17 +66,17 @@ The SAM CLI can also emulate your application's API. Use the `sam local start-ap
 
 ```bash
 AWS_Secrets_Manager_lambda1$ sam local start-api
-AWS_Secrets_Manager_lambda1$ curl http://localhost:3000/
+AWS_Secrets_Manager_lambda1$ curl http://localhost:3000/secret
 ```
 
 The SAM CLI reads the application template to determine the API's routes and the functions that they invoke. The `Events` property on each function's definition includes the route and method for each path.
 
 ```yaml
       Events:
-        HelloWorld:
+        SecretTest:
           Type: Api
           Properties:
-            Path: /hello
+            Path: /secret
             Method: get
 ```
 
