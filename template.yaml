@@ -11,35 +11,16 @@ Globals:
     Timeout: 3
 
 Resources:
-  SecretTestFunctionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: "sts:AssumeRole"
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      Policies:
-        - PolicyName: policy1
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "secretsmanager:GetSecretValue"
-                Resource: "arn:aws:secretsmanager:ap-northeast-1:750031788220:secret:tutorials/MyFirstTutorialSecret-jBJka5"
-
   SecretTestFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
+    # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: secret_test/
       Handler: app.lambda_handler
       Runtime: python3.6
-      Role: !GetAtt SecretTestFunctionRole.Arn
+      Policies:
+      - AWSSecretsManagerGetSecretValuePolicy:
+          SecretArn: "arn:aws:secretsmanager:ap-northeast-1:750031788220:secret:tutorials/MyFirstTutorialSecret-jBJka5"
       Events:
         SecretTest:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
