@@ -11,7 +11,7 @@ Globals:
     Timeout: 3
 
 Resources:
-  SecretTestRole:
+  SecretTestFunctionRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -21,19 +21,13 @@ Resources:
             Principal:
               Service: lambda.amazonaws.com
             Action: "sts:AssumeRole"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: "AWSLambdaBasicExecutionRolePlus1"
+        - PolicyName: policy1
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              # copy from AWSLambdaBasicExecutionRole
-              - Effect: Allow
-                Action:
-                  - "logs:CreateLogGroup"
-                  - "logs:CreateLogStream"
-                  - "logs:PutLogEvents"
-                Resource: "*"
-              # plus secret key readable policy
               - Effect: Allow
                 Action:
                   - "secretsmanager:GetSecretValue"
@@ -45,7 +39,7 @@ Resources:
       CodeUri: secret_test/
       Handler: app.lambda_handler
       Runtime: python3.6
-      Role: !GetAtt SecretTestRole.Arn
+      Role: !GetAtt SecretTestFunctionRole.Arn
       Events:
         SecretTest:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -59,10 +53,10 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   HelloWorldApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/secret/"
   SecretTestFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt SecretTestFunction.Arn
   SecretTestFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt SecretTestRole.Arn
+    Value: !GetAtt SecretTestFunctionRole.Arn
