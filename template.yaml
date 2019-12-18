@@ -24,6 +24,10 @@ Resources:
       CodeUri: secret_test/
       Handler: app.lambda_handler
       Runtime: python3.6
+      Environment:
+        Variables:
+          SM1ID: !Select [0, !Split ["-", !Select [6, !Split [":", !Ref SecretsManagerARNParameter]]]]
+          SM1Region: !Select [3, !Split [":", !Ref SecretsManagerARNParameter]]
       Policies:
       - AWSSecretsManagerGetSecretValuePolicy:
           SecretArn: !Ref SecretsManagerARNParameter

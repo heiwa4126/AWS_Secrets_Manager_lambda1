@@ -1,3 +1,4 @@
+import os
 import json
 import boto3
 import base64
@@ -6,10 +7,15 @@ from botocore.exceptions import ClientError
 # import requests
 
 
+def getenv(key, default):
+    return os.environ.get(key, default)
+
+
 def get_secret():
 
-    secret_name = "tutorials/MyFirstTutorialSecret"
-    region_name = "ap-northeast-1"
+    # Read ID and Region from environment value
+    secret_name = getenv("SM1ID", "tutorials/MyFirstTutorialSecret")
+    region_name = getenv("SM1SM1Region", "ap-northeast-1")
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
