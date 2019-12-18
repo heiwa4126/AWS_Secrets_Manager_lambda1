@@ -10,6 +10,12 @@ Globals:
   Function:
     Timeout: 3
 
+Parameters:
+  SecretsManagerARNParameter:
+    Type: String
+    Default: "arn:aws:secretsmanager:ap-northeast-1:750031788220:secret:tutorials/MyFirstTutorialSecret-jBJka5"
+    Description: Enter AWS Secrets Manager ARN for SecretTestFunction
+
 Resources:
   SecretTestFunction:
     Type: AWS::Serverless::Function
@@ -20,7 +26,7 @@ Resources:
       Runtime: python3.6
       Policies:
       - AWSSecretsManagerGetSecretValuePolicy:
-          SecretArn: "arn:aws:secretsmanager:ap-northeast-1:750031788220:secret:tutorials/MyFirstTutorialSecret-jBJka5"
+          SecretArn: !Ref SecretsManagerARNParameter
       Events:
         SecretTest:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
