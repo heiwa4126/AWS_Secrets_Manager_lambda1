@@ -6,6 +6,67 @@ Twitter APIのキー4つをlambdaに埋め込まない、
 [samの生成したREADMEはこちら](/README-org.md)。
 デプロイや修正は↑を参照。
 
+いろいろ考えたんだけど
+Secrets ManagerはSAM以外で作って、他でも使い回す、
+というシナリオで行くことにした。
+
+
+# デプロイ
+
+## secretを作る
+
+既存のsecretを使いたければ
+ポータルなどからARNを得ておく。
+
+もしsecretがなければ
+
+```sh
+cp secret.conf.template secret.conf
+vim secret.conf
+# ↑値を好きなように書き換える
+./create_secret.sh
+```
+Secrets ManagerのARNが表示されるのでメモしておく.
+
+
+## lambdaをSAMでデプロイする
+
+```sh
+sam build
+sam deploy --guided
+```
+
+`sam deploy`は基本デフォルト値でリターンキーを押すだけでOK。
+ただし以下の3つは
+- Stack name - APPの名前。sm-test-appなど。使える文字種に制限あり
+- AWS Region - 手近なリージョン。ap-northeast-1など
+- SecretsManagerARNParameter - さっきメモしたsecretのARN
+
+を入力する。ちゃんとdeployされると
+
+```
+SecretTestApi - API Gateway endpoint URL     https://xxxxxxxx.execute-api.ap-
+                                             northeast-1.amazonaws.com/Prod/secret/
+```
+みたいにエンドポイントが表示されるので、ここへcurlかなにかでアクセスする。
+
+
+`sam deploy --guided`で入力した値は`samconfig.toml`に保存されるので、
+2回目以降は
+
+```sh
+sam build
+sam deploy
+```
+でOK
+
+
+アンインストールは
+``` sh
+aws cloudformation delete-stack --stack-name sm-test-app
+```
+
+
 # 作業
 
 (続き)
